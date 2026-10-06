@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build action bundle
+        run: bun run build
+
+      - name: Verify or commit compiled bundle
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if [ -n "$(git status --porcelain dist/)" ]; then
+            echo "dist/ was modified during build; committing updated bundle to tag..."
+            git add dist/
+            git commit -m "chore(release): build bundle for ${{ github.ref_name }} [skip ci]"
+            # Re-tag this commit with the version tag
+            git tag -fa "${{ github.ref_name }}" -m "Release ${{ github.ref_name }}"
+            git push origin "${{ github.ref_name }}" --force
+          else
+            echo "dist/ is clean and up to date."
+          fi
+
+      - name: Update Floating Major Version Tag (e.g. v1 -> v1.0.0)
+        run: |
+          MAJOR_TAG=$(echo "${{ github.ref_name }}" | cut -d. -f1)
+          echo "Moving major tag $MAJOR_TAG to point to ${{ github.ref_name }}..."
+          git tag -fa "$MAJOR_TAG" -m "Update $MAJOR_TAG to point to ${{ github.ref_name }}"
+          git push origin "$MAJOR_TAG" --force
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            --title "${{ github.ref_name }}" \
+            --generate-notes

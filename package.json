@@ -1,0 +1,33 @@
+{
+  "name": "bubble-pop",
+  "version": "0.1.0",
+  "description": "GitHub Action that generates a dynamic cyclic animated SVG of your contribution grid bubbling and popping",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "bun build src/index.ts --target node --outfile dist/index.js --minify",
+    "local": "bun src/local.ts",
+    "preview": "bun src/local.ts && echo 'Generated preview.svg'",
+    "check:types": "tsc --noEmit",
+    "check": "tsc --noEmit && bun run build && bun run preview && bun scripts/check.ts",
+    "version:patch": "bun scripts/version.ts patch",
+    "version:minor": "bun scripts/version.ts minor",
+    "version:major": "bun scripts/version.ts major"
+  },
+  "keywords": [
+    "github-action",
+    "contributions",
+    "svg",
+    "animation",
+    "bubble"
+  ],
+  "author": "G. Melo",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@actions/core": "^1.11.1"
+  }
+}

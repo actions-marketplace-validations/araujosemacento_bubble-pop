@@ -1,0 +1,30 @@
+name: "Bubble Pop GitHub Contribution Grid"
+description: "Generates a dynamic, continuous bubbling & popping animated SVG of your GitHub contribution grid"
+author: "G. Melo"
+branding:
+  icon: "circle"
+  color: "green"
+
+inputs:
+  github_user_name:
+    description: "The GitHub username to fetch the contribution grid for"
+    required: true
+  github_token:
+    description: "GitHub Personal Access Token (PAT) or GITHUB_TOKEN to authorize the GraphQL API request"
+    required: true
+  output_path:
+    description: "The path and filename where the generated SVG will be saved"
+    required: false
+    default: "dist/github-contribution-grid-bubble.svg"
+  theme:
+    description: 'Theme style for the SVG card ("auto", "dark", or "light")'
+    required: false
+    default: "auto"
+
+outputs:
+  svg_path:
+    description: "The resolved path of the generated SVG file"
+
+runs:
+  using: "node20"
+  main: "dist/index.js"
