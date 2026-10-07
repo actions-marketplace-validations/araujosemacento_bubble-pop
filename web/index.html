@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="rose-pine">
+<html lang="en" data-theme="auto">
 
 <head>
   <meta charset="UTF-8" />
@@ -60,16 +60,18 @@
       <div class="theme-cluster">
         <!-- Expandable / Collapsible Custom Theme Select with Dynamic Chevron -->
         <div class="custom-select" id="theme-select-container">
-          <button type="button" id="theme-select-trigger" class="select-trigger" aria-haspopup="listbox" aria-expanded="false" title="Choose visual theme">
+          <button type="button" id="theme-select-trigger" class="select-trigger" aria-haspopup="listbox"
+            aria-expanded="false" title="Choose visual theme">
             <span class="select-title">theme:</span>
-            <span class="select-current" id="select-current">rose-pine</span>
-            <svg class="select-chevron" id="select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <span class="select-current" id="select-current">auto</span>
+            <svg class="select-chevron" id="select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </button>
 
           <div class="select-dropdown hidden" id="theme-dropdown" role="listbox" aria-label="Theme Selection">
-            <button type="button" class="theme-item" data-theme="auto" role="option">auto</button>
+            <button type="button" class="theme-item active" data-theme="auto" role="option">auto</button>
 
             <div class="theme-group-header" role="presentation" aria-hidden="true">
               <span class="group-title">##### DARK #####</span>
@@ -78,7 +80,7 @@
             <button type="button" class="theme-item" data-theme="dark" role="option">github</button>
             <button type="button" class="theme-item" data-theme="gitlab-dark" role="option">gitlab</button>
             <button type="button" class="theme-item" data-theme="codeberg-dark" role="option">codeberg</button>
-            <button type="button" class="theme-item active" data-theme="rose-pine" role="option">rose-pine</button>
+            <button type="button" class="theme-item" data-theme="rose-pine" role="option">rose-pine</button>
             <button type="button" class="theme-item" data-theme="dracula" role="option">dracula</button>
             <button type="button" class="theme-item" data-theme="mocha" role="option">mocha</button>
 
@@ -157,7 +159,8 @@
       <div class="footer-links">
         <span>bubble-pop</span>
         <span class="meta-sep">|</span>
-        <a href="https://github.com/marketplace/actions/bubble-pop-github-contribution-grid" target="_blank" rel="noopener noreferrer">marketplace</a>
+        <a href="https://github.com/marketplace/actions/bubble-pop-github-contribution-grid" target="_blank"
+          rel="noopener noreferrer">marketplace</a>
         <span class="meta-sep">|</span>
         <a href="https://github.com/araujosemacento/bubble-pop" target="_blank" rel="noopener noreferrer">github</a>
       </div>

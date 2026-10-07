@@ -21,7 +21,7 @@ async function performSearch(username: string, token: string): Promise<void> {
 }
 
 function init(): void {
-  // Apply initial Rose Pine theme
+  // Apply initial theme
   applyTheme(store.getState().theme);
 
   // Initialize Canvas stage

@@ -1,5 +1,49 @@
-/* Rose Pine Color Palette Tokens */
+/* Auto Theme Tokens (Default: GitHub Dark, adapts to GitHub Light via prefers-color-scheme) */
 :root,
+[data-theme="auto"] {
+  --rp-base: #0d1117;
+  --rp-surface: #161b22;
+  --rp-overlay: #21262d;
+  --rp-muted: #8b949e;
+  --rp-subtle: #c9d1d9;
+  --rp-text: #f0f6fc;
+  --rp-love: #f85149;
+  --rp-gold: #d29922;
+  --rp-rose: #f0883e;
+  --rp-pine: #238636;
+  --rp-foam: #58a6ff;
+  --rp-iris: #bc8cff;
+  --rp-hl-low: #161b22;
+  --rp-hl-med: #30363d;
+  --rp-hl-high: #484f58;
+  --divider-color: #30363d;
+  --active-accent: #39d353;
+}
+
+@media (prefers-color-scheme: light) {
+  :root,
+  [data-theme="auto"] {
+    --rp-base: #ffffff;
+    --rp-surface: #f6f8fa;
+    --rp-overlay: #eaeef2;
+    --rp-muted: #6e7781;
+    --rp-subtle: #57606a;
+    --rp-text: #24292f;
+    --rp-love: #cf222e;
+    --rp-gold: #9a6700;
+    --rp-rose: #bc4c00;
+    --rp-pine: #1a7f37;
+    --rp-foam: #0969da;
+    --rp-iris: #8250df;
+    --rp-hl-low: #f6f8fa;
+    --rp-hl-med: #d0d7de;
+    --rp-hl-high: #afb8c1;
+    --divider-color: #d0d7de;
+    --active-accent: #216e39;
+  }
+}
+
+/* Rose Pine Color Palette Tokens */
 [data-theme="rose-pine"] {
   --rp-base: #191724;
   --rp-surface: #1f1d2e;

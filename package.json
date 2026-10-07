@@ -1,6 +1,6 @@
 {
   "name": "bubble-pop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GitHub Action that generates a dynamic cyclic animated SVG of your contribution grid bubbling and popping",
   "main": "dist/index.js",
   "type": "module",

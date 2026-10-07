@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-07
+
+### Changed
+
+- Updated default theme in web visualizer from rose-pine to auto, adapting to system and browser color scheme on first load.
+- Added dynamic auto theme tokens to web visualizer CSS with GitHub Dark default and GitHub Light on prefers-color-scheme light media query.
+
 ## [1.0.0] - 2026-10-07
 
 ### Added

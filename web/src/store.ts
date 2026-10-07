@@ -22,7 +22,7 @@ type Listener = (state: PreviewState) => void;
 class PreviewStore {
   private state: PreviewState = {
     username: 'octocat',
-    theme: 'rose-pine',
+    theme: 'auto',
     duration: 5.5,
     personalAccessToken: '',
     calendar: null,
