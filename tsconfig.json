@@ -7,7 +7,11 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@core/*": ["src/*"]
+    },
     "outDir": "./dist"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "web/src/**/*", "scripts/**/*"]
 }

@@ -19,7 +19,21 @@ export interface RenderOptions {
   cellGap?: number;
   cellRadius?: number;
   duration?: number;
-  theme?: 'auto' | 'dark' | 'light';
+  theme?:
+    | 'auto'
+    | 'dark'
+    | 'light'
+    | 'rose-pine'
+    | 'rose-pine-dawn'
+    | 'gitlab-dark'
+    | 'gitlab-light'
+    | 'codeberg-dark'
+    | 'codeberg-light'
+    | 'dracula'
+    | 'alucard'
+    | 'mocha'
+    | 'latte'
+    | string;
   username?: string;
   showLegend?: boolean;
 }

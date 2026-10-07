@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-07
+
+### Added
+
+- Expanded visual themes supporting 13 palettes across dark and light environments (auto, dark/github, gitlab-dark, codeberg-dark, rose-pine, dracula, mocha, light/github, gitlab-light, codeberg-light, rose-pine-dawn, alucard, latte).
+- Interactive web preview visualizer (web/) built with Vite and TypeScript, featuring live canvas rendering, smooth in-place CSS theme transitions, custom optgroup select, speed controls, token configuration, and multi-format export utilities.
+- GitHub Pages automated deployment workflow (.github/workflows/pages.yml).
+- Adaptive SVG favicon supporting dark and light browser color schemes.
+- Marketplace listing navigation link in footer and gray-dark branding color scheme.
+
+### Changed
+
+- Overhauled pseudo-random generator with 32-bit Murmur/SplitMix integer hash2D to eradicate vertical column banding.
+- Implemented incommensurable golden-ratio duration scaling to eliminate periodic harmonic resonance.
+- Replaced positive delays with negative phase delays to start animations immediately upon load without initial pauses.
+- Implemented dual-phase keyframe profiles (bubblePopA / bubblePopB, bubbleBurstA / bubbleBurstB) to prevent synchronized bursts and collective lulls.
+- Restricted L0 inactive contribution days strictly to gentle vertical wave undulations without bubble morphing or bursting.
+
+### Fixed
+
+- Preserved multi-line formatting and indentation for clipboard copy of workflow YAML and SVG markup.
+
 ## [0.1.0] - 2026-10-06
 
 ### Added

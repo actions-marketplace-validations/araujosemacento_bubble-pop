@@ -1,4 +1,4 @@
-# AGENTS.md — Development, Branching, Release & SemVer Guidelines
+# AGENTS.md - Development, Branching, Release & SemVer Guidelines
 
 This document establishes the development standards, branching strategy, versioning rules, and release protocols for the **`bubble-pop`** GitHub Action repository. Both AI agents and human contributors must follow these instructions.
 
@@ -40,7 +40,7 @@ We follow **[SemVer 2.0.0](https://semver.org/)** tailored for GitHub Actions li
 
 ### `v<MAJOR>.<MINOR>.<PATCH>` (e.g., `v1.2.3`)
 
-#### **MAJOR (`v2.0.0`) — Breaking Changes**
+#### **MAJOR (`v2.0.0`) - Breaking Changes**
 
 Triggered when an existing workflow using the action would break without configuration changes:
 
@@ -49,7 +49,7 @@ Triggered when an existing workflow using the action would break without configu
 - Changing the minimum GitHub runner environment (e.g., migrating `runs.using` from `node20` to `node24`).
 - Breaking changes to SVG structure that break downstream parsing scripts.
 
-#### **MINOR (`v1.1.0`) — Backward-Compatible Additions**
+#### **MINOR (`v1.1.0`) - Backward-Compatible Additions**
 
 Triggered when adding features that do not break existing installations:
 
@@ -58,7 +58,7 @@ Triggered when adding features that do not break existing installations:
 - New output variables.
 - Visual animation enhancements that preserve existing dimensions and core functionality.
 
-#### **PATCH (`v1.0.1`) — Bug Fixes & Improvements**
+#### **PATCH (`v1.0.1`) - Bug Fixes & Improvements**
 
 Triggered for non-breaking fixes:
 
