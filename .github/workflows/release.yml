@@ -49,10 +49,33 @@ jobs:
           git tag -fa "$MAJOR_TAG" -m "Update $MAJOR_TAG to point to ${{ github.ref_name }}"
           git push origin "$MAJOR_TAG" --force
 
-      - name: Create GitHub Release
+      - name: Create or Update GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${{ github.ref_name }}" \
-            --title "${{ github.ref_name }}" \
-            --generate-notes
+          VERSION="${{ github.ref_name }}"
+          VERSION="${VERSION#v}"
+
+          awk -v ver="$VERSION" '
+            $0 ~ "^## \\[" ver "\\]" { found=1; next }
+            found && $0 ~ "^## \\[" { exit }
+            found { print }
+          ' CHANGELOG.md > release_notes.md
+
+          if [ -s release_notes.md ] && grep -q '[^[:space:]]' release_notes.md; then
+            echo "Found structured release notes in CHANGELOG.md for $VERSION"
+            NOTES_FLAG=(--notes-file release_notes.md)
+          else
+            echo "No structured changelog found for $VERSION, falling back to generated notes"
+            NOTES_FLAG=(--generate-notes)
+          fi
+
+          if gh release view "${{ github.ref_name }}" >/dev/null 2>&1; then
+            echo "Release ${{ github.ref_name }} already exists; updating notes..."
+            gh release edit "${{ github.ref_name }}" "${NOTES_FLAG[@]}"
+          else
+            echo "Creating new release ${{ github.ref_name }}..."
+            gh release create "${{ github.ref_name }}" \
+              --title "${{ github.ref_name }}" \
+              "${NOTES_FLAG[@]}"
+          fi
