@@ -10,7 +10,38 @@ export function downloadSvgFile(username: string, svgContent: string): void {
   URL.revokeObjectURL(url);
 }
 
-export function generateWorkflowYaml(username: string, theme: string): string {
+export interface WorkflowOptions {
+  theme?: string;
+  showHeader?: boolean;
+  showLabels?: boolean;
+  showAvatar?: boolean;
+}
+
+export function generateWorkflowYaml(
+  username: string,
+  themeOrOptions: string | WorkflowOptions = 'auto'
+): string {
+  const options: WorkflowOptions =
+    typeof themeOrOptions === 'string'
+      ? { theme: themeOrOptions }
+      : themeOrOptions;
+
+  const theme = options.theme || 'auto';
+  const showHeader = options.showHeader ?? true;
+  const showLabels = options.showLabels ?? true;
+  const showAvatar = options.showAvatar ?? false;
+
+  let extraInputs = '';
+  if (!showHeader) {
+    extraInputs += '\n          show_header: false';
+  }
+  if (!showLabels) {
+    extraInputs += '\n          show_labels: false';
+  }
+  if (showAvatar) {
+    extraInputs += '\n          show_avatar: true';
+  }
+
   return `name: Generate Bubble Pop Contribution Grid
 
 on:
@@ -36,7 +67,7 @@ jobs:
           github_user_name: ${username || '${{ github.repository_owner }}'}
           github_token: \${{ secrets.GITHUB_TOKEN }}
           output_path: dist/github-contribution-grid-bubble.svg
-          theme: ${theme}
+          theme: ${theme}${extraInputs}
 
       - name: Push to Output Branch
         uses: crazy-max/ghaction-github-pages@v4

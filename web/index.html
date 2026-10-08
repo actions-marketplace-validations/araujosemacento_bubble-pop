@@ -44,11 +44,77 @@
         <div class="preset-row">
           <span class="preset-label">presets:</span>
           <div class="preset-list">
-            <button type="button" class="preset-btn" data-user="octocat">octocat</button>
-            <button type="button" class="preset-btn" data-user="torvalds">torvalds</button>
-            <button type="button" class="preset-btn" data-user="yyx990803">yyx990803</button>
-            <button type="button" class="preset-btn" data-user="gaearon">gaearon</button>
-            <button type="button" class="preset-btn" data-user="mock">mock</button>
+            <div class="preset-subrow">
+              <div class="preset-tag" data-user="octocat">
+                <button type="button" class="preset-btn" data-user="octocat">octocat</button>
+                <button type="button" class="preset-info-btn" data-info-user="octocat" aria-label="About octocat" title="About octocat">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                </button>
+              </div>
+              <div class="preset-tag" data-user="torvalds">
+                <button type="button" class="preset-btn" data-user="torvalds">torvalds</button>
+                <button type="button" class="preset-info-btn" data-info-user="torvalds" aria-label="About torvalds" title="About torvalds">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                </button>
+              </div>
+              <div class="preset-tag" data-user="antirez">
+                <button type="button" class="preset-btn" data-user="antirez">antirez</button>
+                <button type="button" class="preset-info-btn" data-info-user="antirez" aria-label="About antirez" title="About antirez">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="preset-subrow">
+              <div class="preset-tag" data-user="yyx990803">
+                <button type="button" class="preset-btn" data-user="yyx990803">yyx990803</button>
+                <button type="button" class="preset-info-btn" data-info-user="yyx990803" aria-label="About yyx990803" title="About yyx990803">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                </button>
+              </div>
+              <div class="preset-tag" data-user="gaearon">
+                <button type="button" class="preset-btn" data-user="gaearon">gaearon</button>
+                <button type="button" class="preset-info-btn" data-info-user="gaearon" aria-label="About gaearon" title="About gaearon">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                </button>
+              </div>
+              <div class="preset-tag no-info" data-user="mock">
+                <button type="button" class="preset-btn" data-user="mock">mock</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preset Context Tooltip -->
+          <div id="preset-tooltip" class="preset-tooltip hidden" role="tooltip" aria-hidden="true">
+            <div class="preset-tooltip-header">
+              <span id="preset-tooltip-title" class="preset-tooltip-title"></span>
+              <button type="button" id="preset-tooltip-close" class="preset-tooltip-close" aria-label="Close tooltip">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <p id="preset-tooltip-desc" class="preset-tooltip-desc"></p>
           </div>
         </div>
       </div>
@@ -100,6 +166,12 @@
         <div class="speed-row">
           <label for="duration-input" class="speed-label">speed: <span id="duration-value">5.5s</span></label>
           <input type="range" id="duration-input" class="speed-slider" min="3.0" max="9.0" step="0.5" value="5.5" />
+        </div>
+
+        <div class="toggles-row" role="group" aria-label="SVG Element Toggles">
+          <button type="button" id="toggle-header-btn" class="toggle-btn active" data-toggle="header" title="Toggle Title & Total Count Header">header</button>
+          <button type="button" id="toggle-labels-btn" class="toggle-btn active" data-toggle="labels" title="Toggle Month & Day Labels">labels</button>
+          <button type="button" id="toggle-avatar-btn" class="toggle-btn" data-toggle="avatar" title="Toggle User Avatar beside Username">avatar</button>
         </div>
 
         <div class="token-toggle-row">

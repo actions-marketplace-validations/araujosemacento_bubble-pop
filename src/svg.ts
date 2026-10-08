@@ -207,6 +207,10 @@ export function renderContributionSvg(
     duration = 5.5,
     theme = 'auto',
     username,
+    showHeader = true,
+    showLabels = true,
+    showAvatar = false,
+    avatarUrl,
   } = options;
 
   const weeks = calendar.weeks;
@@ -214,10 +218,10 @@ export function renderContributionSvg(
   const gridWidth = numWeeks * (cellSize + cellGap) - cellGap;
   const gridHeight = 7 * (cellSize + cellGap) - cellGap;
 
-  const paddingLeft = 40;
-  const paddingTop = 62;
+  const paddingLeft = showLabels ? 40 : 24;
   const paddingRight = 24;
-  const paddingBottom = 26;
+  const paddingTop = showHeader ? (showLabels ? 62 : 48) : (showLabels ? 34 : 24);
+  const paddingBottom = showHeader || showLabels ? 26 : 24;
 
   const totalWidth = paddingLeft + gridWidth + paddingRight;
   const totalHeight = paddingTop + gridHeight + paddingBottom;
@@ -328,9 +332,62 @@ export function renderContributionSvg(
     });
   });
 
-  // Title / status text
-  const userHeader = username ? `${username}'s Contributions` : 'GitHub Contributions';
+  // Title / status text & optional avatar
+  const userHeader = username ? `${username}'s contributions` : 'GitHub contributions';
   const totalText = `${calendar.totalContributions.toLocaleString()} contributions in the last year`;
+
+  const resolvedAvatarUrl =
+    avatarUrl ||
+    (showAvatar && username && username.toLowerCase() !== 'mock'
+      ? `https://github.com/${username}.png?size=64`
+      : undefined);
+
+  const avatarSize = 18;
+  const avatarX = paddingLeft;
+  const avatarY = 14;
+  const titleX = showAvatar ? paddingLeft + avatarSize + 8 : paddingLeft;
+  const clipId = `avatar-clip-${(username || 'octocat').replace(/[^a-zA-Z0-9_-]/g, '')}`;
+
+  const avatarMarkup = showAvatar
+    ? `
+    <defs>
+      <clipPath id="${clipId}">
+        <circle cx="${(avatarX + avatarSize / 2).toFixed(1)}" cy="${(avatarY + avatarSize / 2).toFixed(1)}" r="${(avatarSize / 2).toFixed(1)}" />
+      </clipPath>
+    </defs>
+    <g id="user-avatar">
+      <circle cx="${(avatarX + avatarSize / 2).toFixed(1)}" cy="${(avatarY + avatarSize / 2).toFixed(1)}" r="${(avatarSize / 2).toFixed(1)}" class="avatar-bg" />
+      <path class="avatar-fallback" d="M ${(avatarX + 5).toFixed(1)} ${(avatarY + 15).toFixed(1)} A 4 4 0 0 1 ${(avatarX + 13).toFixed(1)} ${(avatarY + 15).toFixed(1)} M ${(avatarX + 9).toFixed(1)} ${(avatarY + 9).toFixed(1)} A 2.5 2.5 0 1 1 ${(avatarX + 9).toFixed(1)} ${(avatarY + 4).toFixed(1)} A 2.5 2.5 0 1 1 ${(avatarX + 9).toFixed(1)} ${(avatarY + 9).toFixed(1)}" />
+      ${resolvedAvatarUrl ? `<image href="${resolvedAvatarUrl}" x="${avatarX}" y="${avatarY}" width="${avatarSize}" height="${avatarSize}" clip-path="url(#${clipId})" preserveAspectRatio="xMidYMid slice" />` : ''}
+      <circle cx="${(avatarX + avatarSize / 2).toFixed(1)}" cy="${(avatarY + avatarSize / 2).toFixed(1)}" r="${(avatarSize / 2).toFixed(1)}" class="avatar-border" fill="none" />
+    </g>`
+    : '';
+
+  const headerMarkup = showHeader
+    ? `
+  <!-- Header -->
+  <g id="header">
+    ${avatarMarkup}
+    <text class="title-text" x="${titleX}" y="28">${userHeader}</text>
+    <text class="subtitle-text" x="${totalWidth - paddingRight}" y="28" text-anchor="end">${totalText}</text>
+  </g>`
+    : '';
+
+  const monthLabelsMarkup = showLabels
+    ? `
+  <!-- Month Labels -->
+  <g id="month-labels">
+    ${monthLabels.map((m) => `<text class="label-text" x="${m.x.toFixed(1)}" y="${paddingTop - 12}">${m.text}</text>`).join('\n    ')}
+  </g>`
+    : '';
+
+  const dayLabelsMarkup = showLabels
+    ? `
+  <!-- Day of Week Labels -->
+  <g id="day-labels">
+    ${dayLabels.map((d) => `<text class="label-text" x="${paddingLeft - 10}" y="${d.y.toFixed(1)}" text-anchor="end">${d.text}</text>`).join('\n    ')}
+  </g>`
+    : '';
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalWidth} ${totalHeight}" width="${totalWidth}" height="${totalHeight}">
@@ -383,6 +440,22 @@ export function renderContributionSvg(
       user-select: none;
     }
 
+    .avatar-bg {
+      fill: var(--empty-cell);
+    }
+
+    .avatar-fallback {
+      fill: none;
+      stroke: var(--text-secondary);
+      stroke-width: 1.2px;
+      stroke-linecap: round;
+    }
+
+    .avatar-border {
+      stroke: var(--card-border);
+      stroke-width: 1px;
+    }
+
     /* Cell level base colors */
     rect {
       transition: fill 0.4s ease;
@@ -404,7 +477,7 @@ export function renderContributionSvg(
       animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Standard bubbling & popping - Phase Profile A (late cycle burst) */
+    /* Standard bubbling and popping - Phase Profile A (late cycle burst) */
     @keyframes bubblePopA {
       0%, 65% {
         transform: translate(0, 0) scale(1);
@@ -444,7 +517,7 @@ export function renderContributionSvg(
       }
     }
 
-    /* Standard bubbling & popping - Phase Profile B (mid cycle burst, breaks temporal alignment) */
+    /* Standard bubbling and popping - Phase Profile B (mid cycle burst, breaks temporal alignment) */
     @keyframes bubblePopB {
       0%, 28% {
         transform: translate(0, 0) scale(1);
@@ -617,21 +690,9 @@ export function renderContributionSvg(
   <!-- Background Card -->
   <rect class="card-bg" x="0.5" y="0.5" width="${totalWidth - 1}" height="${totalHeight - 1}" />
 
-  <!-- Header -->
-  <g id="header">
-    <text class="title-text" x="${paddingLeft}" y="28">${userHeader}</text>
-    <text class="subtitle-text" x="${totalWidth - paddingRight}" y="28" text-anchor="end">${totalText}</text>
-  </g>
-
-  <!-- Month Labels -->
-  <g id="month-labels">
-    ${monthLabels.map((m) => `<text class="label-text" x="${m.x.toFixed(1)}" y="${paddingTop - 12}">${m.text}</text>`).join('\n    ')}
-  </g>
-
-  <!-- Day of Week Labels -->
-  <g id="day-labels">
-    ${dayLabels.map((d) => `<text class="label-text" x="${paddingLeft - 10}" y="${d.y.toFixed(1)}" text-anchor="end">${d.text}</text>`).join('\n    ')}
-  </g>
+${headerMarkup}
+${monthLabelsMarkup}
+${dayLabelsMarkup}
 
   <!-- Contribution Grid Cells -->
   <g id="contribution-grid">

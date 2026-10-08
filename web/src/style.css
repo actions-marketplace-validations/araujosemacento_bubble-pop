@@ -441,10 +441,10 @@ body {
 
 .preset-row {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-  justify-content: center;
+  gap: 5px;
+  position: relative;
 }
 
 .preset-label {
@@ -455,24 +455,165 @@ body {
 
 .preset-list {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 5px;
-  flex-wrap: wrap;
 }
 
-.preset-btn {
-  background: transparent;
+.preset-subrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  position: relative;
+}
+
+.preset-subrow:has(.preset-tooltip:not(.hidden)) {
+  z-index: 130;
+}
+
+.preset-tag {
+  display: inline-flex;
+  align-items: center;
   border: 1px solid var(--divider-color);
   border-radius: 3px;
+  background: transparent;
+  position: relative;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.preset-tag:hover {
+  border-color: var(--active-accent);
+}
+
+.preset-tag .preset-btn {
+  background: transparent;
+  border: none;
+  border-radius: 0;
   color: var(--rp-subtle);
   font-size: 11px;
   font-family: 'JetBrains Mono', monospace;
-  padding: 2px 7px;
+  padding: 2px 3px 2px 7px;
   cursor: pointer;
+  line-height: 1.2;
 }
 
-.preset-btn:hover {
+.preset-tag .preset-btn:hover {
   color: var(--rp-text);
-  border-color: var(--active-accent);
+}
+
+.preset-tag.no-info .preset-btn,
+.preset-tag:not(:has(.preset-info-btn)) .preset-btn {
+  padding: 2px 7px;
+}
+
+.preset-info-btn {
+  background: transparent;
+  border: none;
+  color: var(--rp-muted);
+  cursor: pointer;
+  padding: 2px 5px 2px 1px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.preset-info-btn:hover {
+  color: var(--rp-foam);
+  transform: scale(1.1);
+}
+
+.preset-info-btn.active {
+  color: var(--rp-foam);
+}
+
+/* Preset Info Tooltip */
+.preset-tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 215px;
+  background-color: var(--rp-surface);
+  border: 1px solid var(--divider-color);
+  border-radius: 5px;
+  padding: 8px 10px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  z-index: 120;
+  text-align: left;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  pointer-events: auto;
+  animation: tooltipFadeIn 0.15s ease;
+}
+
+.preset-tooltip.hidden {
+  display: none;
+}
+
+.preset-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 8px;
+  height: 8px;
+  background-color: var(--rp-surface);
+  border-top: 1px solid var(--divider-color);
+  border-left: 1px solid var(--divider-color);
+}
+
+.preset-tooltip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.preset-tooltip-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--rp-text);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: -0.01em;
+}
+
+.preset-tooltip-close {
+  background: transparent;
+  border: none;
+  color: var(--rp-muted);
+  cursor: pointer;
+  padding: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  transition: color 0.15s ease;
+}
+
+.preset-tooltip-close:hover {
+  color: var(--rp-text);
+}
+
+.preset-tooltip-desc {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--rp-subtle);
+  margin: 0;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -4px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
 
 /* Right: Theme Cluster */
@@ -637,6 +778,45 @@ body {
   cursor: pointer;
   height: 4px;
   background: var(--rp-overlay);
+}
+
+.toggles-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.toggle-btn {
+  background: transparent;
+  border: 1px solid var(--divider-color);
+  border-radius: 4px;
+  color: var(--rp-muted);
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  outline: none;
+}
+
+.toggle-btn:hover:not(:disabled) {
+  color: var(--rp-text);
+  border-color: var(--rp-subtle);
+}
+
+.toggle-btn.active {
+  color: var(--active-accent);
+  border-color: var(--active-accent);
+  background-color: var(--rp-surface);
+  font-weight: 500;
+}
+
+.toggle-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
 }
 
 .token-toggle-row {

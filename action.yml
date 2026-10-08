@@ -20,6 +20,18 @@ inputs:
     description: 'Theme style for the SVG card ("auto", "dark", "light", "rose-pine", "rose-pine-dawn", "dracula", "alucard", "mocha", "latte", "gitlab-dark", "gitlab-light", "codeberg-dark", "codeberg-light")'
     required: false
     default: "auto"
+  show_header:
+    description: "Whether to render the title and total contribution count header (true/false)"
+    required: false
+    default: "true"
+  show_labels:
+    description: "Whether to render the month and weekday labels (true/false)"
+    required: false
+    default: "true"
+  show_avatar:
+    description: "Whether to render the user avatar beside the username in the header (true/false)"
+    required: false
+    default: "false"
 
 outputs:
   svg_path:

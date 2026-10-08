@@ -36,4 +36,8 @@ export interface RenderOptions {
     | string;
   username?: string;
   showLegend?: boolean;
+  showHeader?: boolean;
+  showLabels?: boolean;
+  showAvatar?: boolean;
+  avatarUrl?: string;
 }
