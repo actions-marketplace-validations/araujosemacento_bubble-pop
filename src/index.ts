@@ -11,9 +11,9 @@ async function run(): Promise<void> {
     const outputPath = core.getInput('output_path') || 'dist/github-contribution-grid-bubble.svg';
     const themeInput = core.getInput('theme') || 'auto';
 
-    const theme = (['auto', 'dark', 'light'].includes(themeInput)
+    const theme = (['auto', 'dark', 'light', 'rose-pine', 'rose-pine-dawn'].includes(themeInput)
       ? themeInput
-      : 'auto') as 'auto' | 'dark' | 'light';
+      : 'auto') as 'auto' | 'dark' | 'light' | 'rose-pine' | 'rose-pine-dawn';
 
     core.info(`[bubble-pop] Fetching contribution data for "${username}"...`);
     const calendar = await fetchUserContributions(username, token);

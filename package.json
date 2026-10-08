@@ -1,6 +1,6 @@
 {
   "name": "bubble-pop",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "description": "GitHub Action that generates a dynamic cyclic animated SVG of your contribution grid bubbling and popping",
   "main": "dist/index.js",
   "type": "module",
@@ -10,6 +10,8 @@
     "preview": "bun src/local.ts && echo 'Generated preview.svg'",
     "check:types": "tsc --noEmit",
     "check": "tsc --noEmit && bun run build && bun run preview && bun scripts/check.ts",
+    "dev:web": "vite --config web/vite.config.ts",
+    "build:web": "vite build --config web/vite.config.ts",
     "version:patch": "bun scripts/version.ts patch",
     "version:minor": "bun scripts/version.ts minor",
     "version:major": "bun scripts/version.ts major"
@@ -25,7 +27,8 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^22.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vite": "^8.3.3"
   },
   "dependencies": {
     "@actions/core": "^1.11.1"

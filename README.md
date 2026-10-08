@@ -102,6 +102,22 @@ Bundles the action into `dist/index.js` for GitHub Actions runners:
 bun run build
 ```
 
+### 5. Run the web preview application locally
+
+Starts the interactive web visualizer on a local dev server:
+
+```bash
+bun run dev:web
+```
+
+### 6. Build the web preview bundle
+
+Compiles the static web bundle for GitHub Pages into `dist-web/`:
+
+```bash
+bun run build:web
+```
+
 ---
 
 ## Action Inputs
@@ -111,7 +127,7 @@ bun run build
 | `github_user_name` | The GitHub username to fetch the contribution grid for | **Yes** | - |
 | `github_token` | GitHub PAT or `GITHUB_TOKEN` to authorize the GraphQL API request | **Yes** | - |
 | `output_path` | The path and filename where the generated SVG will be saved | No | `dist/github-contribution-grid-bubble.svg` |
-| `theme` | Theme mode: `auto` (system preference), `dark`, or `light` | No | `auto` |
+| `theme` | Theme mode: `rose-pine`, `rose-pine-dawn`, `auto`, `dark`, or `light` | No | `auto` |
 
 ---
 

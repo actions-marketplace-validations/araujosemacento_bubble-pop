@@ -22,10 +22,24 @@ const filesToCheckForEmojis = [
   'src/svg.ts',
   'src/local.ts',
   'src/types.ts',
+  'web/index.html',
+  'web/src/style.css',
+  'web/src/main.ts',
+  'web/src/adapter.ts',
+  'web/src/store.ts',
+  'web/src/controls.ts',
+  'web/src/canvas.ts',
+  'web/src/exporter.ts',
+  'web/src/types.ts',
+  'web/src/theme.ts',
+  'web/vite.config.ts',
+  '.github/workflows/pages.yml',
+  'docs/web-preview-plan.md',
 ];
 
-console.log('[check] Verifying no emojis across project files...');
-const NON_ASCII_REGEX = /[^\x00-\x7F]/g;
+console.log('[check] Verifying no emojis or prohibited dashes across project files...');
+const EMOJI_REGEX = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u;
+const PROHIBITED_DASH_REGEX = /[—–]/;
 
 for (const relPath of filesToCheckForEmojis) {
   const absPath = resolve(ROOT, relPath);
@@ -36,18 +50,17 @@ for (const relPath of filesToCheckForEmojis) {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    // Allow em-dash and copyright symbol if strictly necessary, but prefer clean ASCII
-    const matches = line.match(NON_ASCII_REGEX);
-    if (matches) {
-      // Disallow all emojis (Unicode surrogate pairs or emoji blocks)
-      const emojiMatch = line.match(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u);
-      if (emojiMatch) {
-        assert(false, `Emoji "${emojiMatch[0]}" detected in ${relPath} line ${i + 1}: ${line.trim()}`);
-      }
+    const emojiMatch = line.match(EMOJI_REGEX);
+    if (emojiMatch) {
+      assert(false, `Emoji "${emojiMatch[0]}" detected in ${relPath} line ${i + 1}: ${line.trim()}`);
+    }
+    const dashMatch = line.match(PROHIBITED_DASH_REGEX);
+    if (dashMatch) {
+      assert(false, `Prohibited dash "${dashMatch[0]}" detected in ${relPath} line ${i + 1}. Use standard ASCII hyphens (-).`);
     }
   }
 }
-console.log('  -> Emoji check passed: clean plain-text standard maintained.');
+console.log('  -> Emoji and dash check passed: clean plain-text standard maintained.');
 
 // 2. Check action.yml configuration
 console.log('[check] Verifying action.yml schema...');
