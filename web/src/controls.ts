@@ -3,6 +3,34 @@ import { applyTheme } from './theme';
 import { downloadSvgFile, generateWorkflowYaml, generateMarkdownBadge, copyToClipboard } from './exporter';
 import type { AppTheme } from './types';
 
+interface PresetBio {
+  name: string;
+  bio: string;
+}
+
+const PRESET_BIOS: Record<string, PresetBio> = {
+  octocat: {
+    name: 'Mona the Octocat',
+    bio: "GitHub's official mascot, an octopus-cat hybrid. (No idea why)",
+  },
+  torvalds: {
+    name: 'Linus Torvalds',
+    bio: 'Creator and principal developer of the Linux kernel and the Git version control system.',
+  },
+  antirez: {
+    name: 'Salvatore Sanfilippo',
+    bio: 'Italian software developer, author and creator of the open source in-memory data store Redis.',
+  },
+  yyx990803: {
+    name: 'Evan You',
+    bio: 'Creator of the Vue.js JavaScript framework and the Vite frontend build tool.',
+  },
+  gaearon: {
+    name: 'Dan Abramov',
+    bio: 'Software engineer, co-author of Redux and Create React App, and former React core team member.',
+  },
+};
+
 export class ControlsComponent {
   private form: HTMLFormElement;
   private usernameInput: HTMLInputElement;
@@ -18,6 +46,15 @@ export class ControlsComponent {
   private patInput: HTMLInputElement;
   private patToggleBtn: HTMLButtonElement;
   private patContainer: HTMLElement;
+  private toggleHeaderBtn: HTMLButtonElement;
+  private toggleLabelsBtn: HTMLButtonElement;
+  private toggleAvatarBtn: HTMLButtonElement;
+
+  private presetTooltip: HTMLElement;
+  private presetTooltipTitle: HTMLElement;
+  private presetTooltipDesc: HTMLElement;
+  private presetTooltipClose: HTMLButtonElement;
+  private activeTooltipUser: string | null = null;
 
   private copyInput: HTMLInputElement;
   private copyTabs: NodeListOf<HTMLButtonElement>;
@@ -50,6 +87,14 @@ export class ControlsComponent {
     this.patInput = document.getElementById('pat-input') as HTMLInputElement;
     this.patToggleBtn = document.getElementById('pat-toggle-btn') as HTMLButtonElement;
     this.patContainer = document.getElementById('pat-container') as HTMLElement;
+    this.toggleHeaderBtn = document.getElementById('toggle-header-btn') as HTMLButtonElement;
+    this.toggleLabelsBtn = document.getElementById('toggle-labels-btn') as HTMLButtonElement;
+    this.toggleAvatarBtn = document.getElementById('toggle-avatar-btn') as HTMLButtonElement;
+
+    this.presetTooltip = document.getElementById('preset-tooltip') as HTMLElement;
+    this.presetTooltipTitle = document.getElementById('preset-tooltip-title') as HTMLElement;
+    this.presetTooltipDesc = document.getElementById('preset-tooltip-desc') as HTMLElement;
+    this.presetTooltipClose = document.getElementById('preset-tooltip-close') as HTMLButtonElement;
 
     this.copyInput = document.getElementById('copy-input') as HTMLInputElement;
     this.copyTabs = document.querySelectorAll<HTMLButtonElement>('.copy-tab');
@@ -58,6 +103,7 @@ export class ControlsComponent {
 
     this.bindEvents();
     this.updateThemeUI(store.getState().theme);
+    this.updateTogglesUI();
     this.updateCopyField();
   }
 
@@ -88,6 +134,7 @@ export class ControlsComponent {
     const presetButtons = document.querySelectorAll<HTMLButtonElement>('.preset-btn');
     presetButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
+        this.closePresetTooltip();
         const username = btn.getAttribute('data-user');
         if (username) {
           this.usernameInput.value = username;
@@ -96,23 +143,47 @@ export class ControlsComponent {
       });
     });
 
+    // Preset contextual info buttons
+    const infoButtons = document.querySelectorAll<HTMLButtonElement>('.preset-info-btn');
+    infoButtons.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const user = btn.getAttribute('data-info-user');
+        if (user) {
+          this.togglePresetTooltip(user, btn);
+        }
+      });
+    });
+
+    // Preset tooltip close button
+    if (this.presetTooltipClose) {
+      this.presetTooltipClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.closePresetTooltip();
+      });
+    }
+
     // Expandable theme select trigger
     this.selectTrigger.addEventListener('click', (e) => {
       e.stopPropagation();
       this.toggleDropdown();
     });
 
-    // Close dropdown on outside click
+    // Close dropdown and tooltip on outside click
     document.addEventListener('click', (e) => {
       if (this.selectContainer && !this.selectContainer.contains(e.target as Node)) {
         this.closeDropdown();
       }
+      if (this.activeTooltipUser && this.presetTooltip && !this.presetTooltip.contains(e.target as Node)) {
+        this.closePresetTooltip();
+      }
     });
 
-    // Close dropdown on Escape key
+    // Close dropdown and tooltip on Escape key
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         this.closeDropdown();
+        this.closePresetTooltip();
       }
     });
 
@@ -148,6 +219,38 @@ export class ControlsComponent {
         this.patToggleBtn.textContent = 'personal access token';
       }
     });
+
+    // Toggles for header, labels, and avatar
+    if (this.toggleHeaderBtn) {
+      this.toggleHeaderBtn.addEventListener('click', () => {
+        const next = !store.getState().showHeader;
+        store.setShowHeader(next);
+        this.updateTogglesUI();
+        this.updateCopyField();
+      });
+    }
+
+    if (this.toggleLabelsBtn) {
+      this.toggleLabelsBtn.addEventListener('click', () => {
+        const next = !store.getState().showLabels;
+        store.setShowLabels(next);
+        this.updateTogglesUI();
+        this.updateCopyField();
+      });
+    }
+
+    if (this.toggleAvatarBtn) {
+      this.toggleAvatarBtn.addEventListener('click', () => {
+        const state = store.getState();
+        const nextAvatar = !state.showAvatar;
+        if (nextAvatar && !state.showHeader) {
+          store.setShowHeader(true);
+        }
+        store.setShowAvatar(nextAvatar);
+        this.updateTogglesUI();
+        this.updateCopyField();
+      });
+    }
 
     // Copy format tabs
     this.copyTabs.forEach((tab) => {
@@ -188,6 +291,7 @@ export class ControlsComponent {
   }
 
   private handleUserChange(username: string): void {
+    this.closePresetTooltip();
     store.setUsername(username);
     this.updateAvatar(username);
     this.onSearchCallback(username, this.patInput.value.trim());
@@ -252,7 +356,12 @@ export class ControlsComponent {
       this.currentCopyPayload = md;
       this.copyInput.value = md;
     } else if (this.activeFormat === 'workflow') {
-      const yml = generateWorkflowYaml(username, theme);
+      const yml = generateWorkflowYaml(username, {
+        theme,
+        showHeader: state.showHeader,
+        showLabels: state.showLabels,
+        showAvatar: state.showAvatar,
+      });
       this.currentCopyPayload = yml;
       this.copyInput.value = yml;
     } else if (this.activeFormat === 'svg') {
@@ -260,6 +369,77 @@ export class ControlsComponent {
       this.currentCopyPayload = svg;
       this.copyInput.value = svg;
     }
+  }
+
+  private updateTogglesUI(): void {
+    const state = store.getState();
+    if (this.toggleHeaderBtn) {
+      this.toggleHeaderBtn.classList.toggle('active', state.showHeader);
+    }
+    if (this.toggleLabelsBtn) {
+      this.toggleLabelsBtn.classList.toggle('active', state.showLabels);
+    }
+    if (this.toggleAvatarBtn) {
+      this.toggleAvatarBtn.classList.toggle('active', state.showAvatar);
+      this.toggleAvatarBtn.disabled = !state.showHeader;
+      this.toggleAvatarBtn.style.opacity = state.showHeader ? '1' : '0.4';
+    }
+  }
+
+  private togglePresetTooltip(username: string, btn: HTMLButtonElement): void {
+    if (this.activeTooltipUser === username && !this.presetTooltip.classList.contains('hidden')) {
+      this.closePresetTooltip();
+      return;
+    }
+    this.openPresetTooltip(username, btn);
+  }
+
+  private openPresetTooltip(username: string, btn: HTMLButtonElement): void {
+    const bioData = PRESET_BIOS[username];
+    if (!bioData || !this.presetTooltip) return;
+
+    this.presetTooltipTitle.textContent = bioData.name;
+    this.presetTooltipDesc.textContent = bioData.bio;
+
+    const parentTag = btn.closest('.preset-tag') as HTMLElement | null;
+    if (parentTag) {
+      parentTag.appendChild(this.presetTooltip);
+      parentTag.style.zIndex = '130';
+      const subrow = parentTag.closest('.preset-subrow') as HTMLElement | null;
+      if (subrow) subrow.style.zIndex = '130';
+    }
+
+    this.presetTooltip.style.left = '50%';
+    this.presetTooltip.classList.remove('hidden');
+    this.presetTooltip.setAttribute('aria-hidden', 'false');
+    this.activeTooltipUser = username;
+
+    document.querySelectorAll<HTMLButtonElement>('.preset-info-btn').forEach((b) => {
+      b.classList.toggle('active', b === btn);
+    });
+
+    requestAnimationFrame(() => {
+      if (!this.presetTooltip) return;
+      const rect = this.presetTooltip.getBoundingClientRect();
+      if (rect.left < 8) {
+        this.presetTooltip.style.left = `calc(50% + ${8 - rect.left}px)`;
+      } else if (rect.right > window.innerWidth - 8) {
+        this.presetTooltip.style.left = `calc(50% - ${rect.right - (window.innerWidth - 8)}px)`;
+      }
+    });
+  }
+
+  private closePresetTooltip(): void {
+    if (!this.presetTooltip) return;
+    this.presetTooltip.classList.add('hidden');
+    this.presetTooltip.setAttribute('aria-hidden', 'true');
+    this.activeTooltipUser = null;
+    document.querySelectorAll<HTMLElement>('.preset-tag, .preset-subrow').forEach((el) => {
+      el.style.zIndex = '';
+    });
+    document.querySelectorAll<HTMLButtonElement>('.preset-info-btn').forEach((b) => {
+      b.classList.remove('active');
+    });
   }
 
   private showToast(message: string): void {

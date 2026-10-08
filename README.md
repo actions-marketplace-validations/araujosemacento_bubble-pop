@@ -127,7 +127,10 @@ bun run build:web
 | `github_user_name` | The GitHub username to fetch the contribution grid for | **Yes** | - |
 | `github_token` | GitHub PAT or `GITHUB_TOKEN` to authorize the GraphQL API request | **Yes** | - |
 | `output_path` | The path and filename where the generated SVG will be saved | No | `dist/github-contribution-grid-bubble.svg` |
-| `theme` | Theme mode: `rose-pine`, `rose-pine-dawn`, `auto`, `dark`, or `light` | No | `auto` |
+| `theme` | Theme mode: `auto`, `dark`, `light`, `rose-pine`, `rose-pine-dawn`, `dracula`, `alucard`, `mocha`, `latte`, `gitlab-dark`, `gitlab-light`, `codeberg-dark`, `codeberg-light` | No | `auto` |
+| `show_header` | Whether to render the title and total contribution count header (`true`/`false`) | No | `true` |
+| `show_labels` | Whether to render the month and weekday labels (`true`/`false`) | No | `true` |
+| `show_avatar` | Whether to render the user avatar beside the username in the header (`true`/`false`) | No | `false` |
 
 ---
 

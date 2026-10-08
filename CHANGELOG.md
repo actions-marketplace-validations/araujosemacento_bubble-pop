@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-08
+
+### Added
+
+- Configurable SVG element visibility inputs in `action.yml`: `show_header` (title and total counts), `show_labels` (month and weekday labels), and `show_avatar` (user avatar in header).
+- Inlined base64 avatar embedding in core action runner to survive GitHub Camo image proxy stripping and offline rendering.
+- Circular avatar fallback and border styling inside the SVG markup.
+- Interactive toggle buttons for header, labels, and avatar in the web preview visualizer with reactive SVG re-rendering.
+- Preset profile pill redesign with unified borders and circular contextual info icon buttons matching design specifications.
+- Interactive contextual bio tooltips in web preview for presets (octocat, torvalds, antirez, yyx990803, gaearon).
+- Added Salvatore Sanfilippo (antirez) preset to quick-pick options.
+- Dynamic stacking z-index handling ensuring tooltips from upper preset rows paint cleanly above lower rows.
+- Two-row layout grouping presets into centered rows of three tags each for visual balance.
+
+### Changed
+
+- SVG layout padding dynamically recalculates across all combinations of header and label states to maintain a compact, balanced card geometry.
+- Workflow export generator in web preview updated to output show_header, show_labels, and show_avatar parameters.
+
 ## [1.0.1] - 2026-10-07
 
 ### Changed

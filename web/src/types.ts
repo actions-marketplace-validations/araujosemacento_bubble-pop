@@ -23,6 +23,9 @@ export interface PreviewState {
   calendar: ContributionCalendar | null;
   isLoading: boolean;
   errorMessage: string | null;
+  showHeader: boolean;
+  showLabels: boolean;
+  showAvatar: boolean;
   lastUpdated: number;
 }
 

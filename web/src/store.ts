@@ -28,6 +28,9 @@ class PreviewStore {
     calendar: null,
     isLoading: false,
     errorMessage: null,
+    showHeader: true,
+    showLabels: true,
+    showAvatar: false,
     lastUpdated: Date.now(),
   };
 
@@ -99,6 +102,24 @@ class PreviewStore {
 
   setError(errorMessage: string): void {
     this.update({ isLoading: false, errorMessage });
+  }
+
+  setShowHeader(showHeader: boolean): void {
+    if (this.state.showHeader !== showHeader) {
+      this.update({ showHeader });
+    }
+  }
+
+  setShowLabels(showLabels: boolean): void {
+    if (this.state.showLabels !== showLabels) {
+      this.update({ showLabels });
+    }
+  }
+
+  setShowAvatar(showAvatar: boolean): void {
+    if (this.state.showAvatar !== showAvatar) {
+      this.update({ showAvatar });
+    }
   }
 }
 

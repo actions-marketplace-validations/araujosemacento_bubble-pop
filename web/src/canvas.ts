@@ -9,6 +9,9 @@ export class CanvasComponent {
   private lastRenderedCalendar: unknown = null;
   private lastRenderedDuration: number | null = null;
   private lastRenderedTheme: string | null = null;
+  private lastRenderedShowHeader: boolean | null = null;
+  private lastRenderedShowLabels: boolean | null = null;
+  private lastRenderedShowAvatar: boolean | null = null;
 
   constructor(containerId: string, statusId: string, svgWrapperId: string) {
     const container = document.getElementById(containerId);
@@ -45,16 +48,28 @@ export class CanvasComponent {
       return;
     }
 
+    const avatarUrl =
+      state.showAvatar && state.username && state.username.toLowerCase() !== 'mock'
+        ? `https://github.com/${state.username}.png?size=64`
+        : undefined;
+
     const svgString = renderContributionSvg(state.calendar, {
       username: state.username,
       theme: state.theme,
       duration: state.duration,
+      showHeader: state.showHeader,
+      showLabels: state.showLabels,
+      showAvatar: state.showAvatar,
+      avatarUrl,
     });
 
     const isOnlyThemeChange =
       this.lastRenderedUser === state.username &&
       this.lastRenderedCalendar === state.calendar &&
       this.lastRenderedDuration === state.duration &&
+      this.lastRenderedShowHeader === state.showHeader &&
+      this.lastRenderedShowLabels === state.showLabels &&
+      this.lastRenderedShowAvatar === state.showAvatar &&
       this.lastRenderedTheme !== state.theme;
 
     const existingStyle = this.svgWrapper.querySelector('#bubble-pop-styles');
@@ -73,6 +88,9 @@ export class CanvasComponent {
     this.lastRenderedCalendar = state.calendar;
     this.lastRenderedDuration = state.duration;
     this.lastRenderedTheme = state.theme;
+    this.lastRenderedShowHeader = state.showHeader;
+    this.lastRenderedShowLabels = state.showLabels;
+    this.lastRenderedShowAvatar = state.showAvatar;
   }
 
   getSvgString(): string | null {
